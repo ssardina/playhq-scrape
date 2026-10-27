@@ -1,4 +1,4 @@
-# PlayHQ Scrapper and TeamApp Game Schedule Builder
+# PlayHQ Scrapper and TeamApp Fixture Builder
 
 This repo contains Jupyter notebooks to scrape [PlayHQ](https://www.playhq.com) fixtures via its [REST API](https://support.playhq.com/hc/en-au/sections/4405422358297-PlayHQ-APIs) to:
 
@@ -10,7 +10,7 @@ This repo contains Jupyter notebooks to scrape [PlayHQ](https://www.playhq.com) 
 
 The script was originally done to support the [Brunswick Magic Basketball Club](https://www.brunswickmagic.com/) (Melbourne, Australia), from [Coburg Basketball Association (CBA)](https://coburgbasketball.org.au/). However, any club competing in CBA, or more generally under the [PlayHQ](https://bv.playhq.com/) system (even for other sports or countries!), should be able to use it.
 
-- [PlayHQ Scrapper and TeamApp Game Schedule Builder](#playhq-scrapper-and-teamapp-game-schedule-builder)
+- [PlayHQ Scrapper and TeamApp Fixture Builder](#playhq-scrapper-and-teamapp-fixture-builder)
   - [Notebooks available](#notebooks-available)
   - [Pre-requisites \& Setup](#pre-requisites--setup)
     - [Club Configuration File](#club-configuration-file)
