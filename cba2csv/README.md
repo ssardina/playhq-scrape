@@ -1,5 +1,8 @@
 # Translate Coburg Bball Schedule to TeamApp CSV file
 
+> [!CAUTION]
+> This script is no longer used. It was replaced by the PlayHQ API scrapper in this repo, which is much more robust and easier to use. The original script is kept here for reference only. It was all done very ad-hoc...
+
 This is the original system, used in 2021, to extract fixtures from  either:
 
 1. a 2007-Office 365 `.xlsx` spreadsheet containing the game schedule from [Coburg Basketball Association](https://coburgbasketball.org.au/); or
