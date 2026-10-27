@@ -21,9 +21,13 @@ X_TENANT = "bv"
 X_API_KEY = "<YOUR API KEY FROM PLAY-HQ>"
 ORG_ID = "<CLUB PLAY-HQ ORGANISATION ID>"  # can be obtained from PlayHQ admin link
 
-####################
+
+################################################################
 # TEAMAPP CONFIGURATIONS
-####################
+#
+# # COMPLETE THIS IF YOU WANT TO USE PLAYHQ2TEAMAPP NOTEBOOK
+################################################################
+
 DESC_BYE_TAPP = "Sorry, no game for the team in this round."
 DESC_TAPP = """RSVP mandatory for the game.
 
@@ -47,7 +51,6 @@ All clubs in PlayHQ: PLAYHQ_SEASON_URL
     "PLAYHQ_SEASON_URL", PLAYHQ_SEASON_URL
 )
 
-
 def tapp_team_name(team_name):
     """
     Map PlayHQ team name to that used in Teams App
@@ -56,7 +59,7 @@ def tapp_team_name(team_name):
     """
     import re
 
-    return re.search("U.*", team_name).group(0)
+    return re.search(r"U.*", team_name).group(0)
 
 
 def tapp_game_name(team_name, opponent=None, round=None):

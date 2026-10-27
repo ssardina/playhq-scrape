@@ -3,10 +3,8 @@ __copyright__ = "Copyright 2021-2023"
 __credits__ = []
 __license__ = "Apache-2.0 license"
 __email__ = "ssardina@gmail.com"
-# __version__ = "1.0.1"
-# __status__ = "Production"
-
-
+__version__ = "1.0.1"
+__status__ = "Production"
 import json
 from tqdm.notebook import tqdm
 
@@ -174,7 +172,7 @@ class PlayHQ(object):
         club_teams_df = club_teams_df[columns]
         club_teams_df.dropna(inplace=True)
         club_teams_df["age"] = club_teams_df["name"].apply(
-            lambda x: re.search("U(\d*)", x).group(1)
+            lambda x: re.search(r"U(\d*)", x).group(1)
         )
         # club_teams_df = club_teams_df.sort_values('age', ascending=False)
         # club_teams_df.reset_index(inplace=True, drop=True)

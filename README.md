@@ -1,30 +1,46 @@
-# Team App Game Schedule Builder
+# PlayHQ Scrapper and TeamApp Game Schedule Builder
 
-This repo contains tools to scrape [PlayHQ](https://www.playhq.com) fixtures via its [REST API](https://support.playhq.com/hc/en-au/sections/4405422358297-PlayHQ-APIs), and produce CSV files for import as Schedule in a club's [TeamApp](https://www.teamapp.com) account. Using this, one can populate the schedule section for the next round or many rounds of games in minutes and with almost no manual work.
+This repo contains Jupyter notebooks to scrape [PlayHQ](https://www.playhq.com) fixtures via its [REST API](https://support.playhq.com/hc/en-au/sections/4405422358297-PlayHQ-APIs) to:
 
-**Note:**  before July 2022, the CSV file was built using the [`cba2csv`](cba2csv) form spreadsheets provided by CBA. Using PlayHQ REST API provides a much easier and robust solution, so this is not used anymore.
+1. Extract teams and their fixture in a competition, and save them into JSON files.
+2. Produce CSV files for import as Schedule in a club's [TeamApp](https://www.teamapp.com) account. Using this, one can populate the schedule section for the next round or many rounds of games in minutes and with almost no manual work.
 
-The script was originally done to support the [Brunswick Magic Basketball Club](https://www.brunswickmagic.com/) (Melbourne, Australia), from [Coburg Basketball Association (CBA)](https://coburgbasketball.org.au/). However, it any club competing in CBA, or more generally under the [PlayHQ](https://bv.playhq.com/) system (even for other sports), should be able to use it.
+> [!NOTE]
+> Before July 2022, the CSV file was built using the [`cba2csv`](cba2csv/) form spreadsheets provided by CBA (Basketball Association). Using PlayHQ REST API provides a much easier and robust solution, so this is not used anymore.
+
+The script was originally done to support the [Brunswick Magic Basketball Club](https://www.brunswickmagic.com/) (Melbourne, Australia), from [Coburg Basketball Association (CBA)](https://coburgbasketball.org.au/). However, any club competing in CBA, or more generally under the [PlayHQ](https://bv.playhq.com/) system (even for other sports or countries!), should be able to use it.
+
+- [PlayHQ Scrapper and TeamApp Game Schedule Builder](#playhq-scrapper-and-teamapp-game-schedule-builder)
+  - [Notebooks available](#notebooks-available)
+  - [Pre-requisites \& Setup](#pre-requisites--setup)
+    - [Club Configuration File](#club-configuration-file)
+  - [Scrape team fixtures from PlayHQ](#scrape-team-fixtures-from-playhq)
+  - [TeamApps](#teamapps)
+    - [Team Names and Access Groups](#team-names-and-access-groups)
+    - [How to use it](#how-to-use-it)
+  - [PlayHQ REST API via the shell](#playhq-rest-api-via-the-shell)
+  - [Contact](#contact)
+
+## Notebooks available
+
+There are three notebooks in this repo:
+
+1. `playhq_scrape_seasons.ipynb` - to extract the seasons available for a club, and get the season id from its name.
+2. `playhq_scrape_fixture` **[MAIN NOTEBOOK!]**- to extract all teams in a season competition, and their fixtures. Each team fixture is saved into a separate JSON file. This can be used as the season progresses or after the season is finished, to get all the results of the games played.
+3. `playhq2teamapp.ipynb` - to extract all teams and their fixtures in a competition, and produce a CSV file ready to be imported into TeamApp as Schedule.
+    - This is usually used for a particular Club to handle all its teams in a competition.
 
 ## Pre-requisites & Setup
 
-Runs on Python 3.8+ as a Jupyter notebook. 
-
-Packages used (e.g., `pandas`, `json`, `pyshorteners`, `coloredlogs`) can be installed as follows:
+Tools run on Python 3.8+ as a Jupyter notebook, just run the following to get dependencies:
 
 ```shell
 $ pip install -r requirements.txt
 ```
 
-### Team Names and Access Groups
-
-The system assumes _team names_ match _access groups_ names in the TeamApp account of the club. This is important because the CSV file generated will include such team and access group names.
-
-These names generally be very similar to the ones registered in PlayHQ. For example, PlayHQ may have a team "`Magics U14 Boys Gold`", and the club may just use "`U14 Boys Gold`" for the corresponding team AND access group names. A function `tapp_team_name(team_name)` will translate PlayHQ team names to those names in TeamApp (read below).
-
 ### Club Configuration File
 
-The first thing to set-up, once per season, is the club configuration file, which defines a few variables.
+The first thing to set-up, once per season, is the club configuration file, which defines a few variables. This configuration file will be designed at the start of the season and remained fixed.
 
 Make a copy of the template [config_template.py](config_template.py), and complete it according to the Club's details.
 
@@ -36,13 +52,36 @@ Of particular importance are PlayHQ keys to access the Public API:
 
 There are also variables to set regarding the season name (as per PlayHQ), and text templates to use to populate descriptions fields in TeamApp.
 
-Finally, function `tapp_team_name(team_name)` needs to be implemented to map PlayHQ team names, to the names used in TeamApp for the teams and access groups (remember they need to match one-to-one!).
+To access the games in the PlayHQ admin system use:
 
-This configuration file will be designed at the start of the season and remained fixed.
+```shell
+https://bv.playhq.com/org/{$ORG_ID}/games?date=<YY_MM_DD>
+```
 
-## How to use it
+> [!NOTE]
+> If you want to use the `playhq2teamapp.ipynb` notebook, you will need to complete the TeamApp configuration section, which includes the text templates for the game description, and the mapping of PlayHQ team names to TeamApp team names.
 
-To run the system, use notebook [playhq_scrape.ipynb](playhq_scrape.ipynb) and change/configure the first section, with the name of the configuration file of the club and the interval dates you want to extract games from. You can get the season id at the start of each season using notebook [playhq_get_seasons.ipynb](playhq_get_seasons.ipynb).
+## Scrape team fixtures from PlayHQ
+
+The main notebook provided is [`playhq_scrape_fixture`](playhq_scrape_fixture.ipynb), which will extract all teams in a season competition, and their fixtures. Each team fixture is saved into a separate JSON file.
+
+
+## TeamApps
+
+The notebook to translate PlayHQ fixtures to TeamApp CSV file, `playhq2teamapp.ipynb`, will generate a CSV file ready to be imported into TeamApp as Schedule. This is done by using the [TeamApp](https://www.teamapp.com/) web interface, in the Schedule section.
+
+> [!NOTE]
+> Our Brunswick Magic club stopped using it in 2025, as fixtures can now be communicated via [MyHoops](https://get.playhq.com/apps/myhoops) app (which is the official mobile app for basketball in Australia.).
+
+### Team Names and Access Groups
+
+The system assumes _team names_ match _access groups_ names in the TeamApp account of the club. This is important because the CSV file generated will include such team and access group names.
+
+These names generally be very similar to the ones registered in PlayHQ. For example, PlayHQ may have a team "`Magics U14 Boys Gold`", and the club may just use "`U14 Boys Gold`" for the corresponding team AND access group names. A function `tapp_team_name(team_name)` will translate PlayHQ team names to those names in TeamApp (read below).
+
+### How to use it
+
+To run the system, use notebook [playhq2teamapp.ipynb](playhq2teamapp.ipynb) and change/configure the first section, with the name of the configuration file of the club and the interval dates you want to extract games from. You can get the season id at the start of each season using notebook [playhq_scrape_seasons.ipynb](playhq_scrape_seasons.ipynb).
 
 Then, run the system cell by cell, checking on the way all is consistent.
 
@@ -66,9 +105,7 @@ export ORG_ID="......."
 
 We start by **extracting the active seasons for the club**.
 
-
-We start by **extracting the active seasons for the club** (using its organisation id). This can be done using the [playhq_get_seasons.ipynb](playhq_get_seasons.ipynb) notebook.
-
+We start by **extracting the active seasons for the club** (using its organisation id). This can be done using the [playhq_scrape_seasons.ipynb](playhq_scrape_seasons.ipynb) notebook.
 
 ```shell
 $ curl -H "x-phq-tenant: bv" -H "x-api-key: $API_KEY" https://api.playhq.com/v1/organisations/$ORG_ID/seasons
@@ -151,7 +188,7 @@ Season Summer 22/23 has id `a94981b4-75b7-429f-9005-915182ab6153`. We can then *
 $ curl -H "x-phq-tenant: bv" -H "x-api-key: $API_KEY" https://api.playhq.com/v1/seasons/a94981b4-75b7-429f-9005-915182ab6153/teams
 ```
 
-This will yield all the teams in the season. We can extract the club's teams by matching their orgasnisation id. Each team will have an id, for example, team "Magic U10 Boys Gold" has id `bce059fc-67a0-4167-80ee-c2a8fcf4faad`. 
+This will yield all the teams in the season. We can extract the club's teams by matching their orgasnisation id. Each team will have an id, for example, team "Magic U10 Boys Gold" has id `bce059fc-67a0-4167-80ee-c2a8fcf4faad`.
 
 We can then **extract all the team fixture** published so far (this may include past, and future games):
 
@@ -228,14 +265,6 @@ $ curl -H "x-phq-tenant: bv" -H "x-api-key: $API_KEY" https://api.playhq.com/v1/
 ```
 
 The above interaction is done in Python via function `get_json(self, key)`, which provides an iterator with the various response pages, one by one.
-
-## Other info
-
-To access the games in the PlayHQ admin system use:
-
-```shell
-https://bv.playhq.com/org/{$ORG_ID}/games?date=<YY_MM_DD>
-```
 
 ## Contact
 
